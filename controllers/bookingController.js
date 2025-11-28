@@ -9,7 +9,7 @@ const bookFlight = async (req, res) => {
     try {
         const { flightId, flightDetails, passengers, class: flightClass, totalPrice, departureDate, returnDate } = req.body;
         
-        // Generate booking reference
+        // Generate booking reference trying sonar qube
         const bookingReference = 'FL' + Date.now() + Math.random().toString(36).substr(2, 4).toUpperCase();
         
         // Create booking (simplified - in real app would get userId from auth token)
