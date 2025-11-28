@@ -1,0 +1,47 @@
+name: SonarCloud Analysis
+
+on:
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pull-requests: read
+
+jobs:
+  sonarcloud:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0   # IMPORTANT for SonarCloud to compare branches
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+
+      - name: Install dependencies
+        run: npm install
+
+      # Only needed if you want test coverage
+      # - name: Run Tests
+      #   run: npm test -- --coverage
+
+      - name: SonarCloud Scan
+        uses: SonarSource/sonarcloud-github-action@v2
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        with:
+          args: >
+            -Dsonar.projectKey=KOtiyaReba_Travel-Booking-System
+            -Dsonar.organization=kotiyareba
+            -Dsonar.sources=.
+            -Dsonar.exclusions=node_modules/**,dist/**,build/**
+            # Uncomment if you generate coverage:
+            # -Dsonar.javascript.lcov.reportPaths=coverage/lcov.info
